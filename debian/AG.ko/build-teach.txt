@@ -1,0 +1,3 @@
+Step 1:You compiled it linux The kernel source code is renamed ~/kernel (Must be used cp Overweight)
+Step 2:Don't talk nonsense, Start compiling directly(Perform build.sh)
+Part 3:Install the module you just used or give it to others(If someone else is using a different kernel, you can send him the source code)
