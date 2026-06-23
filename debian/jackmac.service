@@ -1,0 +1,12 @@
+[Unit]
+Description=JackAndroid .Mac Service
+After=network.target
+
+[Service]
+ExecStart=/usr/local/bin/mac_daemon
+Restart=always
+User=root
+
+[Install]
+WantedBy=multi-user.target
+
