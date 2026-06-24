@@ -1,29 +1,18 @@
-# JackAndroid Level1 — Kernel Module Makefile
-# Author: digson-kirky-CE
-# License: BSD-2-Clause
-
-# 交叉编译工具链前缀（根据你的手机架构调整）
-CROSS_COMPILE ?= aarch64-linux-gnu-
-# 内核源码路径（必须与手机运行内核版本一致）
-KDIR ?= /root/kernel
-
-obj-m := hello_jack.o
+KDIR ?= /path/to/your/kernel/source
+obj-m := Hotmail.o
 
 all:
 	@echo "============================================"
 	@echo " JackAndroid - by digson-kirky-CE"
-	@echo " Level1 Kernel Module Build"
+	@echo " Building Hotmail.ko + hotmail_bin"
 	@echo "============================================"
-	@echo ""
+	# 编译内核模块
 	$(MAKE) -C $(KDIR) M=$(PWD) ARCH=arm64 CROSS_COMPILE=$(CROSS_COMPILE) modules
-	@echo ""
-	@echo "============================================"
-	@echo " ✅ Build complete!"
-	@ls -lh *.ko 2>/dev/null || echo " No .ko generated"
-	@echo "============================================"
+	# 编译用户态二进制
+	$(CROSS_COMPILE)gcc -static -O2 -o hotmail_bin hotmail_bin.c
+	@ls -lh Hotmail.ko hotmail_bin
 
 clean:
-	$(MAKE) -C $(KDIR) M=$(PWD) ARCH=arm64 clean
-	@echo " Clean done."
+	$(MAKE) -C $(KDIR) M=$(PWD) clean
+	rm -f hotmail_bin
 
-.PHONY: all clean
