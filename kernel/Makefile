@@ -1,18 +1,30 @@
-KDIR ?= /path/to/your/kernel/source
-obj-m := Hotmail.o
+# JackAndroid Kernel Modules Makefile
+# Targets: hello_jack.ko, Hotmail.ko, W7.ko
+# Usage:
+#   Android: make KDIR=/path/to/android_kernel ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu-
+#   Debian:  make (uses current kernel headers)
+
+KDIR ?= /lib/modules/$(shell uname -r)/build
+ARCH ?= $(shell uname -m | sed 's/x86_64/amd64/;s/aarch64/arm64/')
+CROSS_COMPILE ?=
+
+obj-m := hello_jack.o
+obj-m += Hotmail.o
+obj-m += W7.o
 
 all:
 	@echo "============================================"
 	@echo " JackAndroid - by digson-kirky-CE"
-	@echo " Building Hotmail.ko + hotmail_bin"
+	@echo " Building kernel modules for $(ARCH)"
 	@echo "============================================"
-	# 编译内核模块
-	$(MAKE) -C $(KDIR) M=$(PWD) ARCH=arm64 CROSS_COMPILE=$(CROSS_COMPILE) modules
-	# 编译用户态二进制
-	$(CROSS_COMPILE)gcc -static -O2 -o hotmail_bin hotmail_bin.c
-	@ls -lh Hotmail.ko hotmail_bin
+	$(MAKE) -C $(KDIR) M=$(PWD) ARCH=$(ARCH) CROSS_COMPILE=$(CROSS_COMPILE) modules
+	@echo ""
+	@echo " Built modules:"
+	@ls -lh *.ko 2>/dev/null || echo " (none)"
 
 clean:
 	$(MAKE) -C $(KDIR) M=$(PWD) clean
-	rm -f hotmail_bin
+	rm -f *.o *.ko *.mod.c Module.symvers modules.order
+
+.PHONY: all clean
 
